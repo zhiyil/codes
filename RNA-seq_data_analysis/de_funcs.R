@@ -9,6 +9,8 @@ library(vsn)
 library(ggplot2)
 library(NMF)
 library(ComplexHeatmap)
+library(data.table)
+library(stringr)
 
 # generate the DESeqDataSet
 de <- function(countMatrix, tmntMatrix, condition){
@@ -122,8 +124,32 @@ vol_plot <- function(de.results){
 #      lab = rownames(de.results)[gn.selected], cex = 0.6)
 }
 
+# prepare matrix for GO and KEGG analysis
+gkmatrix <- function(de.results){
+        de.genes <- rownames(subset(de.results, padj < 0.05))
+        
+        # get the normalized counts
+        normCounts <- counts(des, normalized = TRUE)
 
-
+        # extract the normalized read counts for DE genes into a matrix
+        mat.de.genes <- normCounts[de.genes, ]
+        
+        diff.gene <- de.results[de.genes,] # get the differential genes with p < 0.05
+        diff.gene <- as.data.frame(diff.gene) # convert to matrix
+        diff.gene <- diff.gene[,c("log2FoldChange", "pvalue", "padj")]
+        
+        # convert the rowname into the fist column of the matrix
+        setDT(diff.gene, keep.rownames = "id")[] # library(data.table)
+        
+        # split the MSTRG/ENSG ids from the gene symbols
+        gene.ids <- str_split_fixed(diff.gene[,id], "\\|", n = 2) #library(stringr)
+        gene.ids <- as.data.table(gene.ids)
+        setnames(gene.ids, 1:2, c("id_number","gene_symbol"))
+        diff.gene <- cbind(diff.gene, gene.ids)
+        setcolorder(diff.gene, c("id", "id_number", "gene_symbol", "log2FoldChange", "pvalue", "padj"))
+        
+        diff.gene <- diff.gene[!(grepl("MSTRG", id_number) & gene_symbol == ""),] # remove rows only containing MSTRG ids but not gene symbols -- these are predicted genes and not be used for GO/KEGG analysis
+}
 
 
 
