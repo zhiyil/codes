@@ -38,6 +38,8 @@ for ID in `cat ../sample.list.txt`; do ((i++)); sed -i "${i}s/^/${ID}\t/" total_
 # note4: i was initially set as 1, as we replace ^ with ${ID}\t starting at the 2nd line (the 1st line is header)
 
 sed -i 's/[()]//g' total_mapping_report.txt # this is to get rid of the perentheses around the percentage numbers
+echo -e "\nNotes:\nTotal\ttotal processed reads\nUnique\tuniquely mapped reads\n%Unique\tpercentage of uniquely mapped reads (of total processed reads)\nMultiple\treads mapped more than once to reference genome\n%Multiple\tpercentage of multiple mapped reads (of total processed reads)\nOverall\ttotal mapping rate (of total processed reads)" >> total_mapping_report.txt # add some notes to the end of the file
+
 # to check the resultant total_mapping_report.txt file, can use this to view:
 column -t total_mapping_report.txt
 

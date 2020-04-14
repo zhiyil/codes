@@ -47,24 +47,24 @@ for (sheet in sheetNames) {
         
         
         # boxplot
-        jpeg(paste(compChar," Read counts statistics.jpg"), width = 500, height = 500)
+        jpeg(paste(compChar,"Read counts statistics.jpg"), width = 500, height = 500)
         par(mar = plot.margin)
         box_plot(log.norm)
         dev.off()
         
         # mean-sd plot
-        jpeg(paste(compChar," Mean-Sd_plot.jpg"), width = 500, height = 500)
+        jpeg(paste(compChar,"Mean-Sd_plot.jpg"), width = 500, height = 500)
         par(mar = plot.margin)
         msd_plot(des)
         dev.off()
         
         # dendrogram
-        jpeg(paste(compChar," Clustering_of_samples.jpg"), width = 500, height = 500)
+        jpeg(paste(compChar,"Clustering_of_samples.jpg"), width = 500, height = 500)
         den_plot(des)
         dev.off()
         
         # PCA plot
-        jpeg(paste(compChar," PCA_plot.jpg"), width = 500, height = 500)
+        jpeg(paste(compChar,"PCA_plot.jpg"), width = 500, height = 500)
         pca_plot(des)
         dev.off()
         
@@ -72,7 +72,7 @@ for (sheet in sheetNames) {
         de.results <- de_analysis(des)
         
         # p-value plot
-        jpeg(paste(compChar," Distribution_of_p-values.jpg"), width = 500, height = 500)
+        jpeg(paste(compChar,"Distribution_of_p-values.jpg"), width = 500, height = 500)
         hist(de.results$pvalue,
              col = "blue", 
              border = "white", 
@@ -82,17 +82,17 @@ for (sheet in sheetNames) {
         dev.off()
         
         # MA plot
-        jpeg(paste(compChar," MA_plot.jpg"), width = 500, height = 500)
+        jpeg(paste(compChar,"MA_plot.jpg"), width = 500, height = 500)
         plotMA(de.results, alpha = 0.05, main = "MA plot", ylim = c(-5, 5))
         dev.off()
         
         # heat map
-        jpeg(paste(compChar," Heatmap_of_differential_genes.jpg"), width = 900, height = 800)
+        jpeg(paste(compChar,"Heatmap_of_differential_genes.jpg"), width = 900, height = 800)
         ht_map(de.results, log.norm)
         dev.off()
         
         # volcano plot
-        jpeg(paste(compChar," Volcano_plot.jpg"), width = 900, height = 900)
+        jpeg(paste(compChar,"Volcano_plot.jpg"), width = 900, height = 900)
         par(mar = plot.margin)
         vol_plot(de.results)
         dev.off()
@@ -101,7 +101,7 @@ for (sheet in sheetNames) {
         # library(xlsx)
         de.results.sorted <- de.results[order(de.results$padj), ]
         write.xlsx2(as.data.frame(de.results.sorted),
-                    file = paste(compChar," Differential genes ordered by p values.xlsx"),
+                    file = paste(compChar,"Differential genes ordered by p values.xlsx"),
                     sheetName = "Differential genes",
                     col.names = T, 
                     row.names = T)
@@ -128,13 +128,13 @@ for (sheet in sheetNames) {
         ## write the GO results into Excel
         # library(xlsx)
         write.xlsx2(ego_result,
-                    file = paste(compChar, " GO enrichment results on differential genes.xlsx"),
+                    file = paste(compChar, "GO enrichment results on differential genes.xlsx"),
                     col.names = T, row.names = F)
         
         
         ### bubble plot ####
         library(enrichplot)
-        jpeg(paste(compChar, " Bubble_plot_GO_terms.jpg"), width = 1000, height = 1300)
+        jpeg(paste(compChar, "Bubble_plot_GO_terms.jpg"), width = 1000, height = 1300)
         par(mar = plot.margin)
         print(dotplot(ego, showCategory = 20))
         dev.off()
@@ -142,12 +142,12 @@ for (sheet in sheetNames) {
         ### network plotting ####
         plotGenes <- setNames(as.character(diff.gene$gene_symbol), 2^diff.gene$log2FoldChange) # get a vector containing fold chage values with names being the gene symbols
         
-        jpeg(paste(compChar, " Network_plot_GO_terms.jpg"), width = 1000, height = 1000)
+        jpeg(paste(compChar, "Network_plot_GO_terms.jpg"), width = 1000, height = 1000)
         par(mar = plot.margin)
         print(cnetplot(ego, categorySize = "pvalue", foldChange = plotGenes))
         dev.off()
         
-        jpeg(paste(compChar, " Network_circular_plot_GO_terms.jpg"), width = 1400, height = 1200)
+        jpeg(paste(compChar, "Network_circular_plot_GO_terms.jpg"), width = 1400, height = 1200)
         par(mar = plot.margin)
         print(cnetplot(ego, foldChange = plotGenes, circular = T, colorEdge = T))
         dev.off()
@@ -173,13 +173,13 @@ for (sheet in sheetNames) {
         ## write the KEGG results into Excel
         # library(xlsx)
         write.xlsx2(ekg_result,
-                    file = paste(compChar, " KEGG enrichment results on differential genes.xlsx"),
+                    file = paste(compChar, "KEGG enrichment results on differential genes.xlsx"),
                     col.names = T, row.names = F)
         
         
         ### bubble plot ####
         library(enrichplot)
-        jpeg(paste(compChar, " Bubble_plot_KEGG_terms.jpg"), width = 1000, height = 1300)
+        jpeg(paste(compChar, "Bubble_plot_KEGG_terms.jpg"), width = 1000, height = 1300)
         par(mar = plot.margin)
         print(dotplot(ekg, showCategory = 20))
         dev.off()
@@ -188,12 +188,12 @@ for (sheet in sheetNames) {
         plotGenes <- setNames(as.character(diff.gene$gene_symbol), 2^diff.gene$log2FoldChange) # get a vector containing fold chage values with names being the gene symbols
         ekg.symbol <- setReadable(ekg, "org.Hs.eg.db", "ENTREZID") #convert entrezid to gene symbol, making the following cnetplot readable
         
-        jpeg(paste(compChar, " Network_plot_KEGG_terms.jpg"), width = 1000, height = 1000)
+        jpeg(paste(compChar, "Network_plot_KEGG_terms.jpg"), width = 1000, height = 1000)
         par(mar = plot.margin)
         print(cnetplot(ekg.symbol, categorySize = "pvalue", foldChange = plotGenes))
         dev.off()
         
-        jpeg(paste(compChar, " Network_circular_plot_KEGG_terms.jpg"), width = 1400, height = 1200)
+        jpeg(paste(compChar, "Network_circular_plot_KEGG_terms.jpg"), width = 1400, height = 1200)
         par(mar = plot.margin)
         print(cnetplot(ekg.symbol, foldChange = plotGenes, circular = T, colorEdge = T))
         dev.off()
