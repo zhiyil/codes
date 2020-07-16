@@ -23,13 +23,12 @@ sheetNames <- paste0("Sheet", 1:15)
 
 for (sheet in sheetNames) {
         sampleInfo <- read.xlsx(file = smplFile, sheetName = sheet, header = TRUE) # read in the corresponding sheet for sample information and comparison
+        sampleInfo <- sampleInfo[complete.cases(sampleInfo),] # remove any NA rows
         compChar <- colnames(sampleInfo)[1] # set the comparison strings, will merge into file names that generated in the following spreadsheets and plots, also will be used for making sub-directory by the name
-        rnames <- as.character(sampleInfo[,1])
-        sampleInfo <- as.data.frame(sampleInfo[,2])
-        row.names(sampleInfo) <- rnames
-        colnames(sampleInfo) <- "condition"
+        row.names(sampleInfo) <- sampleInfo[,1]
+        sampleInfo <- sampleInfo[, 2, drop = F]
         
-        readCounts <- totalCounts[,rnames] # subset relevant data by rnames from the total raw counts table
+        readCounts <- totalCounts[,row.names(sampleInfo)] # subset relevant data from the total raw counts table
         workingDir <- file.path(dir, compChar)
         dir.create(workingDir)
         setwd(workingDir)
