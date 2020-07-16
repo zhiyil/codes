@@ -1,4 +1,11 @@
 #!/usr/bin/Rscript
+num = commandArgs(trailingOnly = T)
+
+if (length(num) ==0) {
+        stop("Please give the number of the sheets in sampleInfo.xlsx")
+}
+
+num <- as.integer(num)
 
 dir <- system("pwd", intern = TRUE)
 setwd(dir)
@@ -13,13 +20,7 @@ totalCounts <- totalCounts[,-1] # get rid of the first column to just retain the
 
 smplFile <- file.path(dir, "sampleInfo.xlsx")
 
-# library(XLConnect)
-# wb <- loadWorkbook(smplFile)
-# sheetNames <- getSheets(wb)# get all sheet names
-# detach("package:XLConnect", unload=T)
-# sheetNames <- c("WT_TNFvsWT_Vehicle", "KO_VehiclevsWT_Vehicle", "KO_TNFvsKO_Vehicle", "KO_TNFvsWT_TNF", "All")
-
-sheetNames <- c("KO_TNFvsKO_Vehicle", "KO_TNFvsWT_TNF", "All")
+sheetNames <- paste0("Sheet", 1:num) 
 
 for (sheet in sheetNames) {
         sampleInfo <- read.xlsx(file = smplFile, sheetName = sheet, header = TRUE) # read in the corresponding sheet for sample information and comparison
